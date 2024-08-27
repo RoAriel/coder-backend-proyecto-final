@@ -1,0 +1,67 @@
+{{>navbar}}
+<h2>Productos</h2>
+<hr>
+<div class="d-flex justify-content-center">
+        <p class="p-1"> <strong>Bienvenido {{user.first_name}}!</strong></p>
+
+</div>
+<div class="d-flex justify-content-center">
+    <a class="p-1" href="/carrito/{{cart._id}}">Ver Carrito</a>
+    <a class="p-1" href="/perfil">Ver Perfil</a>
+</div>
+<hr class="border border-primary border-1 opacity-45">
+<input type="text" value="{{cart._id}}" id="cart" hidden>
+
+<div class="d-flex">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Producto</th>
+                <th scope="col">Codigo</th>
+                <th scope="col">Precio</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+                {{#each payload}}
+            <tr>
+                <td>{{title}}</td>
+                <td>{{code}}</td>
+                <td>${{price}}</td>
+                <td><button type="button" class="btn btn-outline-primary btn-sm" onclick="comprar('{{_id}}','{{title}}')">Agregar a
+            Carrito</button></td>
+            </tr>
+                {{/each}}
+        </tbody>
+    </table>
+</div>
+
+<div class="d-flex flex-row">
+    <div class="p-1">
+        <a href="/productos?pagina=1">Ir a Pág. 1</a>
+        {{#if hasPrevPage}}
+        <a href="{{prevLink}}">Ant.</a>
+        {{/if}}
+
+        <label for="paginaActual"></label>
+        <input type="number" max="{{totalPages}}" min="1" step="1" id="paginaActual" name="paginaActual"
+            value="{{page}}" onchange="cambioPagina()">
+
+        {{#if hasNextPage}}
+        <a href="{{nextLink}}">Sig.</a>
+        {{/if}}
+
+    </div>
+
+    <a class="p-2" href="/productos?pagina={{totalPages}}">Ult.Pág.</a>
+</div>
+
+
+<script>
+    let inputPaginaActual = document.getElementById("paginaActual")
+    const cambioPagina = () => {
+        window.location.href = "/productos?pagina=" + inputPaginaActual.value
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/productos.js"></script>

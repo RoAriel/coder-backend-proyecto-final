@@ -1,0 +1,148 @@
+paths:
+  /api/carts/:
+    post:
+      tags:
+        - Carts
+      summary: Crea un Carrito con productos.
+      description: Crea un carrito sin owner, solo crea un carro con productos.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/cargaCart'
+      responses:
+        '200':
+          description: El carrito creado correctamente.
+          content:
+            application/json:
+              schema: 
+                type: object
+                items:
+                  $ref: '#components/schemas/CartRespuesta'
+
+  /api/carts/{cid}:
+    get:
+      tags:
+        - Carts
+      summary: Retorna un carrito de compras.
+      description: Retorna el carrito al cual correspone el CID.
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          example: 6674a1436f05df233631f749
+          description: id del carrito que se está solicitando
+      responses:
+        '200':
+          description: El carrito fue obtenido correctamente.
+          content:
+            application/json:
+              schema: 
+                type: object
+                items:
+                  $ref: '#components/schemas/CartRespuesta'
+    delete:
+      tags:
+        - Carts
+      summary: Vacia el carrito de compras.
+      description: Vacia el carrito de compras ingresado.
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          example: 6674a1436f05df233631f749
+          description: id del carrito que se está solicitando
+      responses:
+        '200':
+          description: El carrito vaciado correctamente.
+          content:
+            application/json:
+              schema: 
+                type: object
+                items:
+                  $ref: '#components/schemas/CartRespuesta'
+    put:
+      tags:
+        - Carts
+      summary: Agrega productos al carrto.
+      description: Agrega productos al carrto al cual correspone el CID.
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          example: 6674a1436f05df233631f749
+          description: id del carrito que se está solicitando
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/cargaCart'
+      responses:
+        '200':
+          description: El carrito fue obtenido correctamente.
+          content:
+            application/json:
+              schema: 
+                type: object
+                items:
+                  $ref: '#components/schemas/CartRespuesta'
+        
+  /api/carts/{cid}/products/{pid}:
+    post:
+      tags:
+        - Carts
+      summary: Agrega producto al carrito.
+      description: Agrega productos al carrito al cual correspone el CID.
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          example: 6674a1436f05df233631f749
+          description: id del carrito que se está solicitando
+        - name: pid
+          in: path
+          required: true
+          example: 6674a1436f05df233631f749
+          description: id del producto que se quiere agregar
+      responses:
+        '200':
+          description: El producto fue agregado correctamente.
+          content:
+            application/json:
+              schema: 
+                type: object
+                items:
+                  $ref: '#components/schemas/CartRespuesta'
+    
+    put:
+      tags:
+        - Carts
+      summary: Actualiza cantidad del producto en el carrito.
+      description: Actualiza cantidad del producto en el carrito.
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          example: 6674a503c009b4436b1c71ae
+          description: id del carrito que se está solicitando
+        - name: pid
+          in: path
+          required: true
+          example: 6674a1436f05df233631f749
+          description: id del producto que se quiere editar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: number
+                  example: 400
+                  description: Cantidad a agregar.
+      responses:
+        '200':
+          description: El producto fue agregado correctamente.

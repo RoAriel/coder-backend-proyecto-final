@@ -1,0 +1,29 @@
+<ul>
+    {{#if login}}
+    <li>
+        <a href="/perfil">Perfil</a>
+    </li>
+    <li>
+        <a href="/productos">Comprar</a>
+    </li>
+    <li>
+        <a href="/logout">Logout</a> 
+
+    </li>
+
+    {{else}}
+    <li>
+        <a href="/registro">Registro</a>
+    </li>
+    <li>
+        <a href="/login">Login</a>
+    </li>
+        <li>
+        <a href="/chat">Chat</a>
+    </li>
+        </li>
+        <li>
+        <a href="/api-docs">Documentacion</a>
+    </li>
+    {{/if}}
+</ul>

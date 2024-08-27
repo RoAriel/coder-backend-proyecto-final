@@ -1,0 +1,19 @@
+{{>navbar}}
+<h3>Ingrese email para poder recuperar la contraseña</h3>
+<form action="/api/sessions/emailDeRecupero" method="post">
+
+<div class="form-group row">
+    <label class="col-sm-1 col-form-label col-form-label-sm">Email</label>
+    <div class="col-sm-5">
+        <input type="email" class="form-control form-control-sm" name="email" placeholder="@email">
+    </div>
+</div>
+<br>
+<div class="form-group row">
+    <div class="col-sm-10">
+        <input class="btn btn-outline-primary btn-sm" type="submit" value="Recuperar contraseña">
+    </div>
+</div>
+</form>
+<br>
+{{>menu}}
