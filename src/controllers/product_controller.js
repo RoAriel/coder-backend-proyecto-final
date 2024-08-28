@@ -4,7 +4,7 @@ import { fakerES_MX as faker } from "@faker-js/faker"
 import { CustomError } from '../utils/CustomError.js';
 import { TIPOS_ERROR } from '../utils/EErrors.js';
 import { errorCause } from '../utils/errorCause.js';
-import { errorSiNoEsValidoID } from '../utils.js';
+import { errorSiNoEsValidoID } from '../utils/validaID.js';
 
 let errorName
 

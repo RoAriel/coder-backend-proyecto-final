@@ -2,7 +2,7 @@ import passport from "passport";
 import local from 'passport-local'
 import passportJWT from 'passport-jwt'
 import github from 'passport-github2'
-import { generaHash, validaPasword } from '../utils.js'
+import { generaHash, validaPasword } from '../utils/passwordHandle.js'
 import { UserDto } from "../dto/UserDTO.js";
 import { cartService } from "../repository/cart.services.js";
 import { userService } from "../repository/user.services.js";

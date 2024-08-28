@@ -5,7 +5,7 @@ import { errorCause } from "../utils/errorCause.js"
 import { TIPOS_ERROR } from "../utils/EErrors.js"
 import { enviarEmail } from "../utils/mailer.js"
 import jwt from "jsonwebtoken"
-import { generaHash } from "../utils.js"
+import { generaHash } from "../utils/passwordHandle.js"
 
 let errorName
 export const updateRol = async (req, res, next) => {

@@ -2,7 +2,7 @@ import { Router } from "express";
 import jwt from "jsonwebtoken"
 import passport from 'passport';
 import { auth } from '../middleware/auth.js';
-import { passportCall } from '../utils.js'
+import { passportCall } from '../utils/passportCallHandle.js'
 import { updateRol, recuperarPWemail,updatePassword } from "../controllers/user_controller.js";
 
 export const router = new Router()
