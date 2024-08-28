@@ -1,9 +1,8 @@
-import { isValidObjectId } from 'mongoose';
 import { productService } from '../repository/product.services.js';
 import { fakerES_MX as faker } from "@faker-js/faker"
 import { CustomError } from '../utils/CustomError.js';
 import { TIPOS_ERROR } from '../utils/EErrors.js';
-import { errorCause } from '../utils/errorCause.js';
+import { errorCause } from '../utils/errorCause.js'
 import { errorSiNoEsValidoID } from '../utils/validaID.js';
 
 let errorName
@@ -165,33 +164,28 @@ export const updateProduct = async (req, res, next) => {
 export const deleteProduct = async (req, res, next) => {
     let { pid } = req.params
     let user = req.user
-    let productsDelUser
     try {
         errorSiNoEsValidoID(pid, 'PID')
 
-        if (user.rol != 'admin') {
-            productsDelUser = await productService.getProducts({ owner: user.email })
+        let { title, owner } = await productService.getProductBy({ _id: pid })
 
-            if (!((productsDelUser.map(pr => (pr._id).toString())).includes(pid))) {
-                errorName = 'Error en  deleteProduct-controller'
-                CustomError.createError(errorName,
-                    errorCause('deleteProduct',
-                        errorName,
-                        'El producto no pertenece a la lista de productos creados por el usuario'),
-                    'No puede eliminar este producto', TIPOS_ERROR.AUTORIZACION)
-            }
+        if (user.rol != 'admin' & user.rol != owner) {
+            errorName = 'Error en  deleteProduct-controller'
+            CustomError.createError(errorName,errorCause('deleteProduct',
+                errorName,
+                'El producto no pertenece a la lista de productos creados por el usuario'),
+                'No puede eliminar este producto', TIPOS_ERROR.AUTORIZACION)
         }
 
-        let productName = (await productService.getProductBy({ _id: pid })).title
         let data = await productService.deleteProduct(pid)
 
         if (data.deletedCount > 0) {
 
             res.setHeader('Content-Type', 'application/json');
-            return res.status(200).json({ payload: `Producto ${productName} eliminado` });
+            return res.status(200).json({ payload: `Producto ${title} eliminado` });
         }
     } catch (error) {
-        console.log('ERROR: ', error)
+
         return next(error)
 
     }

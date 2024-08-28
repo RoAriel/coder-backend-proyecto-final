@@ -16,11 +16,12 @@ export const errorHandler = (error, req, res, next) => {
             req.logger.error(error);
         }
     }
-
+    
     switch (error.code) {
-        case TIPOS_ERROR.AUTENTICACION || TIPOS_ERROR.AUTORIZACION:
+        case  TIPOS_ERROR.AUTENTICACION :
+        case  TIPOS_ERROR.AUTORIZACION:
             res.setHeader('Content-Type', 'application/json');
-            return res.status(401).json({ error: `Credenciales incorrectas` })
+            return res.status(403).json({ error: `Credenciales incorrectas` })
 
         case TIPOS_ERROR.ARGUMENTOS_INVALIDOS:
             res.setHeader('Content-Type', 'application/json');
