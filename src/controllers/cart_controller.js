@@ -325,10 +325,10 @@ export const purchase = async (req, res, next) => {
 
         await ticketService.createTicket(ticket)
 
-        enviarEmail(user.email, 'Gracias!, te acercamos el ticket de compra', tckHtml)
+        enviarEmail(purchaser, 'Gracias!, te acercamos el ticket de compra', tckHtml)
 
         res.setHeader('Content-Type', 'application/json');
-        return res.status(200).json({ payload: cartWithNoStock.map(prod => prod.id) })
+        return res.status(200).json({ payload: `Compra completada, revise su email. Estos son los productos que no contaban con stock: ${cartWithNoStock.map(prod => prod.id)}` })
 
     } catch (error) {
         return next(error)
