@@ -1,4 +1,3 @@
-import { isValidObjectId } from 'mongoose';
 import { v4 as uuidv4 } from "uuid"
 import { cartService } from '../repository/cart.services.js';
 import { productService } from '../repository/product.services.js';
@@ -7,6 +6,8 @@ import { CustomError } from '../utils/CustomError.js';
 import { TIPOS_ERROR } from '../utils/EErrors.js';
 import { errorCause } from '../utils/errorCause.js';
 import { errorSiNoEsValidoID } from '../utils/validaID.js';
+import { ticketHtml } from '../utils/crearTicketHTML.js';
+import { enviarEmail } from "../utils/mailer.js";
 let errorName
 
 
@@ -278,6 +279,7 @@ export const purchase = async (req, res, next) => {
     let cart
     let cartWithNoStock = []
     let amount = 0
+    let productosComprados = []
     try {
         errorSiNoEsValidoID(cid, 'CID')
 
@@ -290,6 +292,9 @@ export const purchase = async (req, res, next) => {
 
                 await productService.updtadeProduct(prd._id, { stock: prd.stock - product.quantity })
                 amount = amount + (product.quantity * prd.price)
+                productosComprados.push({title: prd.title,
+                                         quantity: product.quantity,
+                                         price:prd.price})
 
             } else {
                 cartWithNoStock.push(product)
@@ -304,14 +309,24 @@ export const purchase = async (req, res, next) => {
 
         }
 
+        let code =  uuidv4()
+        let purchase_datetime = new Date()
+        let purchaser = user.email
+
+        let tckHtml =ticketHtml(productosComprados,purchase_datetime,amount,code)
+        
+
         let ticket = {
-            code: uuidv4(),
-            purchase_datetime: new Date(),
-            amount: amount,
-            purchaser: user.email,
+            code,
+            purchase_datetime,
+            amount,
+            purchaser
         }
 
         await ticketService.createTicket(ticket)
+
+        enviarEmail(user.email, 'Gracias!, te acercamos el ticket de compra', tckHtml)
+
         res.setHeader('Content-Type', 'application/json');
         return res.status(200).json({ payload: cartWithNoStock.map(prod => prod.id) })
 

@@ -8,6 +8,7 @@
             <tr>
                 <th scope="col">Producto</th>
                 <th scope="col">Cantidad</th>
+                <th scope="col">Precio</th>
             </tr>
         </thead>
         <tbody>
@@ -15,10 +16,14 @@
             <tr>
                 <td>{{pid.title}}</td>
                 <td>{{quantity}}</td>
+                <td>${{pid.price}}</td>
             </tr>
             {{/each}}
         </tbody>
     </table>
+</div>
+<div>
+    <h3>Total: ${{totalCart}}</h3>
 </div>
 
 <br>

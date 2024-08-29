@@ -1,8 +1,7 @@
 import { Router } from "express";
 import { passportCall } from '../utils/passportCallHandle.js'
 import { auth } from "../middleware/auth.js";
-import { getProducts } from "../controllers/vista_controller.js";
-import { cartService } from "../repository/cart.services.js";
+import { getProducts, getCartID } from "../controllers/vista_controller.js";
 
 export const router = Router()
 
@@ -19,18 +18,9 @@ router.get('/chat', passportCall('current'), auth(['user']), (req, res) => {
 
 router.get('/productos', passportCall('current'), getProducts)
 
-router.get('/carrito/:cid', passportCall('current'), async (req, res) => {
-
-    let { cid } = req.params
-    let user = req.user
-
-    let cart = await cartService.getCartPopulate(cid)
-    res.setHeader('Content-Type', 'text/html');
-    return res.status(200).render("cart", { cart, user });
-})
+router.get('/carrito/:cid', passportCall('current'),getCartID)
 
 // LOG
-
 router.get('/', (req, res) => {
 
     res.status(200).render('home', { login: req.session.user })
@@ -81,6 +71,7 @@ router.get('/solicitudenviada', (req, res) => {
         res.status(200).render('reviseEmail', { user: user })
 
 })
+
 router.get('/newPassword/', (req, res) => {
 
     let { tk } = req.query

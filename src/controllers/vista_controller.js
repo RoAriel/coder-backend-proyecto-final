@@ -1,4 +1,5 @@
 import { productService } from '../repository/product.services.js';
+import {cartService} from '../repository/cart.services.js'
 
 export const getProducts = async (req, res) => {
 
@@ -47,4 +48,26 @@ export const getProducts = async (req, res) => {
         )
 
     }
+}
+
+export const getCartID = async (req, res) => {
+
+    let { cid } = req.params
+    let user = req.user
+
+    let cart = await cartService.getCartPopulate(cid)
+
+    let totalCart = 0
+
+    cart.products.forEach(producto => {
+
+        let quantity = producto.quantity
+
+        let totalProduct = producto.pid.price * quantity
+
+        totalCart = totalCart+totalProduct
+    });
+
+    res.setHeader('Content-Type', 'text/html');
+    return res.status(200).render("cart", { cart, user, totalCart });
 }
