@@ -6,6 +6,7 @@ import { TIPOS_ERROR } from "../utils/EErrors.js"
 import { enviarEmail } from "../utils/mailer.js"
 import jwt from "jsonwebtoken"
 import { generaHash } from "../utils/passwordHandle.js"
+import { errorSiNoEsValidoID } from "../utils/validaID.js"
 
 let errorName
 export const updateRol = async (req, res, next) => {
@@ -123,6 +124,27 @@ export const updatePassword = async (req, res, next) => {
         next(error)
     }
 
+}
+
+export const deleteUser = async (req, res, next) => {
+
+    try {
+        let { uid } = req.params
+
+        errorSiNoEsValidoID(uid, 'UID')
+
+        let email = (await userService.getUserBy({_id : uid})).email
+
+        let data = await userService.deleteUser({email : email})
+
+        if (data.deletedCount > 0) {
+
+            res.setHeader('Content-Type', 'application/json');
+            return res.status(200).json({ payload: `Usuario ${email} eliminado` });
+        }
+    } catch (error) {
+        next(error)   
+    }
 }
 
 
