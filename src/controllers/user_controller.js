@@ -1,4 +1,3 @@
-import { isValidObjectId } from "mongoose"
 import { userService } from "../repository/user.services.js"
 import { CustomError } from "../utils/CustomError.js"
 import { errorCause } from "../utils/errorCause.js"
@@ -16,10 +15,7 @@ export const updateRol = async (req, res, next) => {
 
     try {
 
-        if (!isValidObjectId(uid)) {
-            errorName = 'Error en updateRol'
-            CustomError.createError(errorName, errorCause('updateRol', errorName, `El uid es incorrecto. isValidObjectId: ${isValidObjectId(uid)}`), errorName, TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
-        }
+        errorSiNoEsValidoID(uid, 'UID')
 
         let user = await userService.getUserBy({ _id: uid })
 
