@@ -33,6 +33,9 @@ paths:
                 type: object
                 items: 
                   $ref: '#components/schemas/ProductsPaginated'
+        '404':
+          description: Error con el argumento del producto
+          $ref: '#components/responses/NotFound'
     post:
       tags:
         - Products
@@ -48,6 +51,9 @@ paths:
           description: Producto Creado
         "500":
           description: Error interno del servidor
+        '404':
+          description: Error con el argumento del producto
+          $ref: '#components/responses/NotFound'
                        
   /api/products/{pid}:
     get:
@@ -70,6 +76,9 @@ paths:
                 type: object
                 items: 
                   $ref: '#components/schemas/ProductRespuesta'
+        '404':
+          description: Error con el argumento del producto
+          $ref: '#components/responses/NotFound'
     put:
       tags:
         - Products
@@ -104,7 +113,10 @@ paths:
               schema: 
                 type: object
                 items: 
-                  $ref: '#components/schemas/ProductRespuesta'     
+                  $ref: '#components/schemas/ProductRespuesta'    
+        '404':
+          description: Error con el argumento del producto
+          $ref: '#components/responses/NotFound' 
 
     delete:
       tags:
@@ -127,5 +139,8 @@ paths:
                 type: object
                 items: 
                   $ref: '#components/schemas/ProductRespuesta'
+        '404':
+          description: Error con el argumento del producto
+          $ref: '#components/responses/NotFound'
 
       

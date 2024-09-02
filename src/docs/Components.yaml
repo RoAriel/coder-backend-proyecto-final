@@ -99,14 +99,25 @@ components:
           quantity:
             type: number
             description: Cantidad de productos de este tipo en el carrito
-
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+  
   responses:
-    UnauthorizedError:
-      description: Authentication information is missing or invalid
-      headers:
-        WWW_Authenticate:
+    NotFound:
+      description: Error con los argumentos. Verifique que tenga ID validos para carrito o producto
+      content:
+        application/json:
           schema:
-            type: string
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Usuario no autorizado para ver este recurso
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   
   requestBodies:
     logUser:

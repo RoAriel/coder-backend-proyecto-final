@@ -20,6 +20,9 @@ paths:
                 type: object
                 items:
                   $ref: '#components/schemas/CartRespuesta'
+        '404':
+          description: Error con los argumentos de carga del carrito
+          $ref: '#components/responses/NotFound'
 
   /api/carts/{cid}:
     get:
@@ -42,6 +45,9 @@ paths:
                 type: object
                 items:
                   $ref: '#components/schemas/CartRespuesta'
+        '404':
+          description: Error con el argumento del carrito
+          $ref: '#components/responses/NotFound'
     delete:
       tags:
         - Carts
@@ -62,6 +68,9 @@ paths:
                 type: object
                 items:
                   $ref: '#components/schemas/CartRespuesta'
+        '404':
+          description: Error con el argumento del carrito
+          $ref: '#components/responses/NotFound'
     put:
       tags:
         - Carts
@@ -88,7 +97,10 @@ paths:
                 type: object
                 items:
                   $ref: '#components/schemas/CartRespuesta'
-        
+        '404':
+          description: Error con el argumento del carrito
+          $ref: '#components/responses/NotFound'  
+
   /api/carts/{cid}/products/{pid}:
     post:
       tags:
@@ -115,6 +127,9 @@ paths:
                 type: object
                 items:
                   $ref: '#components/schemas/CartRespuesta'
+        '404':
+          description: Error con el argumento del carrito
+          $ref: '#components/responses/NotFound'  
     
     put:
       tags:
@@ -146,3 +161,7 @@ paths:
       responses:
         '200':
           description: El producto fue agregado correctamente.
+        '404':
+          description: Error con el argumento del carrito
+          $ref: '#components/responses/NotFound'  
+      
