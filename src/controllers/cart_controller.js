@@ -5,7 +5,7 @@ import { ticketService } from '../repository/ticket.services.js';
 import { CustomError } from '../utils/CustomError.js';
 import { TIPOS_ERROR } from '../utils/EErrors.js';
 import { errorCause } from '../utils/errorCause.js';
-import { errorSiNoEsValidoID } from '../utils/validaID.js';
+import { errorSiNoEsValidoID } from '../utils/validaID.js'
 import { ticketHtml } from '../utils/crearTicketHTML.js';
 import { enviarEmail } from "../utils/mailer.js";
 let errorName
@@ -20,13 +20,13 @@ export const getCartByCid = async (req, res, next) => {
 
         let cart = await cartService.getCartPopulate(cid)
         if (cart) {
-            
-            return res.status(200).json({cart});
+
+            return res.status(200).json({ cart });
         } else {
             errorName = 'ID cart no existe'
             CustomError.createError(errorName, errorCause('getCartByCid', errorName, `CID: ${cid} --> Cart: ${cart}`), "Ingrese carrito existente", TIPOS_ERROR.NOT_FOUND)
         }
-    } catch (error) {        
+    } catch (error) {
         return next(error)
     }
 }
@@ -34,6 +34,7 @@ export const getCartByCid = async (req, res, next) => {
 export const createCart = async (req, res, next) => {
 
     let productCart = req.body
+    let cartNew
 
     try {
 
@@ -57,8 +58,53 @@ export const createCart = async (req, res, next) => {
                 TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
         }
 
-        let cartNew = await cartService.createCart(productCart.products)
+        if (productCart.products.length == 1) {
+            
+            let prod_id = productCart.products[0].pid
+            let prod_cantidad = productCart.products[0].quantity
 
+            errorSiNoEsValidoID(prod_id)
+
+            let existProduct = await productService.getProductBy({ _id: prod_id })
+
+            if (existProduct & (prod_cantidad > 0)) {
+
+                cartNew = await cartService.createCart(productCart.products)
+            } else {
+
+                errorName = 'ID Producto no existe o cantidad menor o igual a 0'
+                CustomError.createError(errorName, 
+                    errorCause('createCart', errorName, 
+                        `El producto: ${prod_id} - cantidad: ${prod_cantidad}`), "Ingrese producto existente o una cantidad mayor a 0", TIPOS_ERROR.NOT_FOUND)
+            }
+
+        }
+
+        if (productCart.products.length > 1) {
+
+            let productsDB = await productService.getProducts()
+            let idProductos = productsDB.map(pr => pr._id)
+
+            let productsACargar = productCart.products.map(pr => pr.pid)
+
+            productsACargar.forEach(pr_id => errorSiNoEsValidoID(pr_id))
+
+            let cantidadPorPrd = productCart.products.map(pr => pr.quantity)
+
+            let todosLosProductosExisten = productsACargar.every(e => idProductos.includes(e))
+
+            let cantidadesCorrectas = cantidadPorPrd.every(cant => cant > 0)
+
+            if (todosLosProductosExisten & cantidadesCorrectas) {
+                cartNew = await cartService.createCart(productCart.products)
+
+            } else {
+                errorName = 'Uno o mas productos no existen o alguna cantidad es menor a 0'
+                CustomError.createError(errorName, errorCause('createCart', errorName, 'Uno o mas productos no existen o alguna cantidad es menor a 0'), "Ingrese productos existentes y cantidades mayor a 0", TIPOS_ERROR.NOT_FOUND)
+            }
+
+
+        }
         res.setHeader('Content-Type', 'application/json');
         return res.status(200).json({ cartNew });
 
@@ -92,14 +138,14 @@ export const addProductToCart = async (req, res, next) => {
         }
 
         // Controlo que el producto no sea uno creado por el usuario
-        if(existProduct.owner == user.email){
+        if (existProduct.owner == user.email) {
             errorName = 'No Puede agregar el producto'
             CustomError.createError(errorName,
                 errorCause('addProductToCart', errorName, `Product ID: ${pid} tiene como owner al usuario de esta operacion ${user.email}`), //  --> aca la correccion es sacar el error.message porque no esta def error 
                 'No puede agregar un producto que usted creo', TIPOS_ERROR.ARGUMENTOS_INVALIDOS
             )
         }
-        
+
 
         //Controlo que existe el CID
 
@@ -292,9 +338,11 @@ export const purchase = async (req, res, next) => {
 
                 await productService.updtadeProduct(prd._id, { stock: prd.stock - product.quantity })
                 amount = amount + (product.quantity * prd.price)
-                productosComprados.push({title: prd.title,
-                                         quantity: product.quantity,
-                                         price:prd.price})
+                productosComprados.push({
+                    title: prd.title,
+                    quantity: product.quantity,
+                    price: prd.price
+                })
 
             } else {
                 cartWithNoStock.push(product)
@@ -309,12 +357,12 @@ export const purchase = async (req, res, next) => {
 
         }
 
-        let code =  uuidv4()
+        let code = uuidv4()
         let purchase_datetime = new Date()
         let purchaser = user.email
 
-        let tckHtml =ticketHtml(productosComprados,purchase_datetime,amount,code)
-        
+        let tckHtml = ticketHtml(productosComprados, purchase_datetime, amount, code)
+
 
         let ticket = {
             code,
