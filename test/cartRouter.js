@@ -31,7 +31,7 @@ describe('Test cart router', async function () {
 
     it("La ruta /api/carts/:cid, en su metodo get, retorna un object con el cart buscado", async () => {
         
-       let cid = '6674a503c009b4436b1c71ae'
+       let cid = '66cfd9ed1c8126b8548cc74f'
        let cart = await cartService.getCartById(cid)
 
        let res = await requester.get(`/api/carts/${cid}`)
