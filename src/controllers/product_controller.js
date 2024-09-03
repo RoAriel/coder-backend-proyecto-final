@@ -168,7 +168,16 @@ export const deleteProduct = async (req, res, next) => {
     try {
         errorSiNoEsValidoID(pid, 'PID')
 
-        let { title, owner } = await productService.getProductBy({ _id: pid })
+        let  product = await productService.getProductBy({ _id: pid })
+
+        if(!product){
+            errorName = 'Producto no encontrado para ser eliminado'
+            CustomError.createError(errorName, errorCause('deleteProduct.controller',errorName,'Producto no encontrado'),'Producto no encontrado', TIPOS_ERROR.NOT_FOUND)
+        }
+
+        let owner = product.owner
+        let title = product.title
+
 
         if (user.rol != 'admin' & user.rol != 'premium') {
             errorName = 'Error en  deleteProduct-controller'
