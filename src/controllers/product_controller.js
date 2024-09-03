@@ -4,6 +4,7 @@ import { CustomError } from '../utils/CustomError.js';
 import { TIPOS_ERROR } from '../utils/EErrors.js';
 import { errorCause } from '../utils/errorCause.js'
 import { errorSiNoEsValidoID } from '../utils/validaID.js';
+import { enviarEmail } from '../utils/mailer.js';
 
 let errorName
 
@@ -169,12 +170,29 @@ export const deleteProduct = async (req, res, next) => {
 
         let { title, owner } = await productService.getProductBy({ _id: pid })
 
-        if (user.rol != 'admin' & user.rol != owner) {
+        if (user.rol != 'admin' & user.rol != 'premium') {
             errorName = 'Error en  deleteProduct-controller'
-            CustomError.createError(errorName,errorCause('deleteProduct',
+            CustomError.createError(errorName, errorCause('deleteProduct',
                 errorName,
-                'El producto no pertenece a la lista de productos creados por el usuario'),
+                'No tiene el rol necesario para esta operacion'),
                 'No puede eliminar este producto', TIPOS_ERROR.AUTORIZACION)
+        }
+
+        if(user.rol != 'admin' & user.email != owner){
+            errorName = 'Error en  deleteProduct-controller'
+            CustomError.createError(errorName, errorCause('deleteProduct',
+                errorName,
+                'El producto no es de su propiedad, no puede eliminarlo'),
+                'No puede eliminar este producto', TIPOS_ERROR.AUTORIZACION)
+        } 
+        
+        if (user.rol == 'admin') {
+            let msj = ` <h3>Eliminación de su producto</h3>
+            <p>El siguiente producto fue eliminado de la base de datos por un usuario Admin.:
+            <br> <strong><i>{ pid: ${pid}, title: ${title} }</i></strong><br>
+            Contactese con el Administrador para más detalles</p>`
+
+            enviarEmail(owner, 'Eliminacion de producto!', msj)
         }
 
         let data = await productService.deleteProduct(pid)
