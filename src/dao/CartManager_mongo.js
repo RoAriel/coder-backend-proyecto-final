@@ -27,4 +27,8 @@ export class CartManagerMongo {
         return await cartModel.findOne({_id : id}).populate("products.pid").lean()
     }
 
+    async delete(id){
+        return await cartModel.deleteOne({ _id: id })
+    }
+
 }

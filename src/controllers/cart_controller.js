@@ -59,23 +59,24 @@ export const createCart = async (req, res, next) => {
         }
 
         if (productCart.products.length == 1) {
-            
+
             let prod_id = productCart.products[0].pid
             let prod_cantidad = productCart.products[0].quantity
 
             errorSiNoEsValidoID(prod_id)
 
             let existProduct = await productService.getProductBy({ _id: prod_id })
+            console.log('Existe: ', existProduct);
 
-            if (existProduct & (prod_cantidad > 0)) {
-
-                cartNew = await cartService.createCart(productCart.products)
-            } else {
+            if (!existProduct & (prod_cantidad <= 0)) {
 
                 errorName = 'ID Producto no existe o cantidad menor o igual a 0'
-                CustomError.createError(errorName, 
-                    errorCause('createCart', errorName, 
+                CustomError.createError(errorName,
+                    errorCause('createCart', errorName,
                         `El producto: ${prod_id} - cantidad: ${prod_cantidad}`), "Ingrese producto existente o una cantidad mayor a 0", TIPOS_ERROR.NOT_FOUND)
+
+            } else {
+                cartNew = await cartService.createCart(productCart.products)
             }
 
         }
@@ -83,10 +84,9 @@ export const createCart = async (req, res, next) => {
         if (productCart.products.length > 1) {
 
             let productsDB = await productService.getProducts()
-            let idProductos = productsDB.map(pr => pr._id)
+            let idProductos = productsDB.map(pr => pr._id.toString())
 
             let productsACargar = productCart.products.map(pr => pr.pid)
-
             productsACargar.forEach(pr_id => errorSiNoEsValidoID(pr_id))
 
             let cantidadPorPrd = productCart.products.map(pr => pr.quantity)
@@ -295,7 +295,7 @@ export const updateQuantityOfProduct = async (req, res, next) => {
         }
         await cartService.addProductToCart(cid, products)
         res.setHeader('Content-Type', 'application/json');
-        return res.status(200).json(`Update quantity del Producto ${pid}`);
+        return res.status(200).json(`Updated quantity del Producto ${pid}`);
     } catch (error) {
         return next(error)
     }

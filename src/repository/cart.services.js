@@ -68,5 +68,18 @@ class CartService {
             return CustomError.createError(errorName, errorCause('getCartPopulate', errorName, error.message), error.message, TIPOS_ERROR.INTERNAL_SERVER_ERROR)
         }
     }
+
+    deleteCart = async(cid) =>{
+
+        let cart = await this.dao.getOneBy({ _id: cid })
+
+        if (!cart) {
+            errorName = 'Error en deleteCart.service'
+            return CustomError.createError(errorName,
+                errorCause('deleteCart', errorName, `Cart no econtrado ID value: ${cid}`),
+                'Cart no econtrado', TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
+        }
+        return await this.dao.delete(cid)
+    }
 }
 export const cartService = new CartService(new CartDao)
