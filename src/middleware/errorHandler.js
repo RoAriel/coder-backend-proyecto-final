@@ -2,17 +2,11 @@ import { TIPOS_ERROR } from "../utils/EErrors.js";
 
 export const errorHandler = (error, req, res, next) => {
     if (error.cause) {
-        console.log('1');
-
         req.logger.error(error.cause)
     } else {
         if (error.message) {
-            console.log('2');
-
             req.logger.error(error.message)
         } else {
-            console.log('3');
-
             req.logger.error(error);
         }
     }

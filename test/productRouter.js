@@ -16,8 +16,6 @@ const connDB = async () => {
         await mongoose.connect(`${DATABASE_URL}`, { dbName: `${DATABASE}` })
         logger.info(`DB ONLINE (En modulo Test)>>> DBNAME: ${DATABASE}`)
     } catch (error) {
-        console.log('ERROR:', error);
-
         logger.error("Error al conectar a DB", error.message)
     }
 

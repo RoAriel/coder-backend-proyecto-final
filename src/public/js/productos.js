@@ -1,7 +1,6 @@
 const comprar=async(pid,prdName)=>{
     let inputCart=document.getElementById("cart")
     let cid=inputCart.value
-    console.log(`Codigo producto: ${pid}, Codigo Carrito: ${cid}`)
 
     let respuesta=await fetch(`/api/carts/${cid}/products/${pid}`,{
         method:"post"

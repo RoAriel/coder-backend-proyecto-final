@@ -66,7 +66,6 @@ export const createCart = async (req, res, next) => {
             errorSiNoEsValidoID(prod_id)
 
             let existProduct = await productService.getProductBy({ _id: prod_id })
-            console.log('Existe: ', existProduct);
 
             if (!existProduct & (prod_cantidad <= 0)) {
 

@@ -16,8 +16,6 @@ const connDB = async () => {
         await mongoose.connect(`${DATABASE_URL}`, { dbName: `${DATABASE}` })
         logger.info(`DB ONLINE (En modulo Test)>>> DBNAME: ${DATABASE}`)
     } catch (error) {
-        console.log('ERROR:', error);
-
         logger.error("Error al conectar a DB", error.message)
     }
 
@@ -91,7 +89,6 @@ describe('Test cart router', async function () {
 
         let cart = body.cartNew
         id_cart_1 = cart._id
-        console.log('cart id 1', id_cart_1);
         
         expect(isValidObjectId(cart._id)).to.be.true
         expect(cart.products).to.be.an('array')
@@ -112,7 +109,6 @@ describe('Test cart router', async function () {
 
         let cart = body.cartNew
         id_cart_2 = cart._id
-        console.log('cart id 2', id_cart_2);
         
         expect(isValidObjectId(cart._id)).to.be.true
         expect(cart.products).to.be.an('array')

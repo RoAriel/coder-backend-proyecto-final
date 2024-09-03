@@ -39,7 +39,7 @@ export const updateRol = async (req, res, next) => {
 
 }
 
-export const recuperarPWemail = async (req, res) => {
+export const recuperarPWemail = async (req, res, next) => {
 
     let { email } = req.body
     let user = await userService.getUserBy({ email: email })
@@ -68,7 +68,7 @@ export const recuperarPWemail = async (req, res) => {
     try {
         res.redirect(`/solicitudenviada/?email=${user.email}&first_name=${user.first_name}`);
     } catch (error) {
-        console.log('error redi: ', error);
+        next(error)
         
     }
 }
@@ -115,8 +115,6 @@ export const updatePassword = async (req, res, next) => {
         }
 
     } catch (error) {
-        console.log('error:', error);
-
         next(error)
     }
 
