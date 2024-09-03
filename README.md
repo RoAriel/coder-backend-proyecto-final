@@ -27,6 +27,7 @@ npm run start
 npm run dev
 
 # con este comando podras correr el proyecto e ir realizando modificaciones las cuales sera reflejadas sin necesidad de volver a correr el script.
+*** Cambiar el nombre del env.sample por .env para poder obtener las variables de entorno necesarias.
 
 npm run test
 
